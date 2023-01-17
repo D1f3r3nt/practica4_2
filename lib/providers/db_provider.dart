@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_scan/models/scan_model.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class DBProvider {
   static Database? _database;
@@ -7,11 +12,115 @@ class DBProvider {
 
   DBProvider._();
 
-  get database {
-    if (_database != null) return _database;
+  Future<Database> get database async {
+    if (_database == null) _database = await initDb();
 
-    //_database = await initDb();
+    return _database!;
+  }
 
-    return _database;
+  Future<Database> initDb() async {
+    // Obtenir es path
+    Directory documentDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentDirectory.path, 'Scans.db');
+    print(path);
+
+    // Creació de la BBDD
+    return await openDatabase(
+      path,
+      version: 1,
+      onOpen: (db) {},
+      onCreate: (db, version) async {
+        await db.execute('''
+        CREATE TABLE Scans(
+          id INTEGER PRIMARY KEY,
+          tipus TEXT,
+          valor TEXT
+        )
+        ''');
+      },
+    );
+  }
+
+  // Manera tradicional
+  Future<int> insertRawScan(ScanModel scan) async {
+    final id = scan.id;
+    final tipus = scan.tipus;
+    final valor = scan.valor;
+
+    final db = await database;
+
+    final res = await db.rawInsert('''
+      INSERT INTO Scans(id, tipus, valor)
+      VALUES ($id, $tipus, $valor)
+    ''');
+
+    return res;
+  }
+
+  // Amb JSON
+  Future<int> insertScan(ScanModel scan) async {
+    final db = await database;
+
+    final res = await db.insert('Scans', scan.toJson());
+
+    return res;
+  }
+
+  // Collir tots els camps
+  Future<List<ScanModel>> getAllScans() async {
+    final db = await database;
+
+    final res = await db.query('Scans');
+
+    return res.isNotEmpty ? res.map((e) => ScanModel.fromJson(e)).toList() : [];
+  }
+
+  // Collir camp per id
+  Future<ScanModel?> getScanById(int id) async {
+    final db = await database;
+    final res = await db.query('Scans', where: 'id = ?', whereArgs: [id]);
+
+    if (res.isNotEmpty) {
+      return ScanModel.fromJson(res.first);
+    }
+
+    return null;
+  }
+
+  // Collir per tipus
+  Future<List<ScanModel>> getScanByTipus(String tipus) async {
+    final db = await database;
+    final res = await db.query('Scans', where: 'tipus = ?', whereArgs: [tipus]);
+
+    return res.isNotEmpty ? res.map((e) => ScanModel.fromJson(e)).toList() : [];
+  }
+
+  // Per actualitzar
+  Future<int> updateScan(ScanModel scan) async {
+    final db = await database;
+    final res = db.update(
+      'Scans',
+      scan.toJson(),
+      where: 'id = ?',
+      whereArgs: [scan.id],
+    );
+
+    return res;
+  }
+
+  // Per borrar tots
+  Future<int> deleteAllScan() async {
+    final db = await database;
+    final res = await db.delete('Scans');
+
+    return res;
+  }
+
+  // Per borrar per ID
+  Future<int> deleteScanById(int id) async {
+    final db = await database;
+    final res = await db.delete('Scans', where: 'id = ?', whereArgs: [id]);
+
+    return res;
   }
 }
