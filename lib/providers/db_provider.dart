@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:qr_scan/models/scan_model.dart';
+import 'package:qr_scan/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
+/// Clase dedicada a guardar los datos en la base de datos SQFLITE,
+/// para asi tener persistencia
 
 class DBProvider {
   static Database? _database;
@@ -18,6 +21,7 @@ class DBProvider {
     return _database!;
   }
 
+  /// Para iniciar la base de datos
   Future<Database> initDb() async {
     // Obtenir es path
     Directory documentDirectory = await getApplicationDocumentsDirectory();

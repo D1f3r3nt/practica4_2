@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_scan/providers/ui_provider.dart';
+import 'package:qr_scan/providers/providers.dart';
 
+/// Widget para el navegador inferior
 class CustomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

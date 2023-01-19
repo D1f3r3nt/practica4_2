@@ -2,6 +2,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+/// Este seria el modelo que se usara para comunicar el tema de los Scans
+
 class ScanModel {
   ScanModel({
     this.id,

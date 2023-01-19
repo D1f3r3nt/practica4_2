@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:qr_scan/models/scan_model.dart';
+import 'package:qr_scan/models/models.dart';
 
+/// Clase dedicada a mostrar la vista de Google Maps
 class MapaScreen extends StatefulWidget {
   const MapaScreen({Key? key}) : super(key: key);
 
@@ -12,6 +13,7 @@ class MapaScreen extends StatefulWidget {
 }
 
 class _MapaScreenState extends State<MapaScreen> {
+  /// Para controlar la vista del google maps
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -22,6 +24,7 @@ class _MapaScreenState extends State<MapaScreen> {
     final ScanModel scan =
         ModalRoute.of(context)!.settings.arguments as ScanModel;
 
+    /// Establecemos el punto de las coordenadas geograficas
     final CameraPosition _puntInicial = CameraPosition(
       target: scan.getLating(),
       zoom: 18,
@@ -30,6 +33,7 @@ class _MapaScreenState extends State<MapaScreen> {
 
     Set<Marker> markers = Set();
 
+    /// Para que salga el marcador con el punto rojo
     markers.add(Marker(
       markerId: MarkerId('QRCode'),
       position: scan.getLating(),
@@ -41,6 +45,7 @@ class _MapaScreenState extends State<MapaScreen> {
         title: const Text('Ubicacion'),
         actions: [
           IconButton(
+            /// Para mover la camara a un punto indicado
             onPressed: () async {
               GoogleMapController controller = await _controller.future;
               controller

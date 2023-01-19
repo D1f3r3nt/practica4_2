@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_scan/providers/scan_list_provider.dart';
+import 'package:qr_scan/providers/providers.dart';
 import 'package:qr_scan/utils/utils.dart';
 
+/// Lista dedicada a enseñar las
+/// listas que devuelve el ScanListProvider
 class ScanTiles extends StatelessWidget {
   final String tipus;
   const ScanTiles({Key? key, required this.tipus});

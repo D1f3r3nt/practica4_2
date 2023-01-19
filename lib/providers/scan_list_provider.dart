@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:qr_scan/models/scan_model.dart';
-import 'package:qr_scan/providers/db_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:qr_scan/models/models.dart';
+import 'package:qr_scan/providers/providers.dart';
 
+/// Clase dedicada a proveer la listas para cada situacion
+/// Se trata de un Provider
 class ScanListProvider extends ChangeNotifier {
   List<ScanModel> scans = [];
   String tipusSeleccionat = 'http';
